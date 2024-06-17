@@ -1,6 +1,8 @@
 package com.deepak.calling_3rdpartyapi.Controller;
 
 import com.deepak.calling_3rdpartyapi.Models.Product;
+import com.deepak.calling_3rdpartyapi.Service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,9 +10,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/Product")
 public class ProductController {
+
+
+private ProductService ps ;
+    public ProductController (ProductService productService ){
+        this.ps= productService ;
+    }
+
 @GetMapping("/{id}")
-    public Product getproductbyId(@PathVariable("id") String id){
-           return new Product() ;
+    public Product getproductbyId(@PathVariable("id") Long id){
+           return ps.getProductbyId(id);
     }
 
     @GetMapping("/")
