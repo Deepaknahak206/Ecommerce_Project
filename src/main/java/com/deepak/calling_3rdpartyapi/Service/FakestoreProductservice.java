@@ -6,6 +6,9 @@ import com.deepak.calling_3rdpartyapi.dtos.FakeStoreResposeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
 @Service
 public class FakestoreProductservice implements  ProductService{
     private RestTemplate restTemplate ;
@@ -14,7 +17,7 @@ public class FakestoreProductservice implements  ProductService{
     }
     @Override
     public Product getProductbyId(Long id) {
-       FakeStoreResposeDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Product/"+id, FakeStoreResposeDTO.class);
+       FakeStoreResposeDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResposeDTO.class);
     if(fsrd==null){
         return null ;
     }
@@ -31,11 +34,23 @@ public class FakestoreProductservice implements  ProductService{
         p.setImage(fsrd.getImage());
         p.setDescription(fsrd.getDescription());
 
-            Category c = new Category();
+        Category c = new Category();
         c.setTitle(fsrd.getCategory());
         c.setId(fsrd.getId());
         p.setCategory(c);
         return p ;
+        }
+        public Product[] getAllProducts(){
+        FakeStoreResposeDTO[] ftdo = restTemplate.getForObject("https://fakestoreapi.com/Products/", FakeStoreResposeDTO[].class) ;
+
+        if(ftdo==null){
+            return null ;
+        }
+        Product[] products = new Product[ftdo.length] ;
+        for(int i =0;i< ftdo.length;i++){
+            products[i] = converFakestoredtosToProduct(ftdo[i]) ;
+        }
+        return products;
         }
     @Override
     public Product UpdateProduct(Long id) {

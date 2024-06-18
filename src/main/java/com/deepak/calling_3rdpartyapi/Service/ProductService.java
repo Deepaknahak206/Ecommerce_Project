@@ -13,4 +13,6 @@ public interface ProductService {
     Product DeleteProduct(Long id) ;
 
     Product CreateProduct(Product p) ;
+
+    Product[] getAllProducts();
 }
