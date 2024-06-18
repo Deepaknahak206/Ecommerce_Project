@@ -11,11 +11,8 @@ import java.util.List;
 @RequestMapping("/Products")
 public class ProductController {
 
-
+@Autowired
 private ProductService ps ;
-    public ProductController (ProductService productService ){
-        this.ps= productService ;
-    }
 
 @GetMapping("/{id}")
     public Product getproductbyId(@PathVariable("id") Long id){

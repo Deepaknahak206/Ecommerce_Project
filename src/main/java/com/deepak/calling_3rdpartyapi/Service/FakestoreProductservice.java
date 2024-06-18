@@ -11,10 +11,9 @@ import java.util.List;
 
 @Service
 public class FakestoreProductservice implements  ProductService{
+    @Autowired
     private RestTemplate restTemplate ;
-    public FakestoreProductservice (RestTemplate restTemplate){
-        this.restTemplate = restTemplate ;
-    }
+
     @Override
     public Product getProductbyId(Long id) {
        FakeStoreResposeDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResposeDTO.class);
