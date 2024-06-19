@@ -3,7 +3,6 @@ package com.deepak.calling_3rdpartyapi.Service;
 import com.deepak.calling_3rdpartyapi.Models.Product;
 
 
-
 public interface ProductService {
 
     Product getProductbyId(Long id) ;
@@ -12,7 +11,8 @@ public interface ProductService {
 
     Product DeleteProduct(Long id) ;
 
-    Product CreateProduct(Product p) ;
-
     Product[] getAllProducts();
+
+
+    Product createProduct(Product p);
 }

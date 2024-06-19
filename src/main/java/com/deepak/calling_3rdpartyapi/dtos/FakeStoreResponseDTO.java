@@ -1,10 +1,9 @@
 package com.deepak.calling_3rdpartyapi.dtos;
 
-import com.deepak.calling_3rdpartyapi.Models.Category;
 import lombok.Data;
 
 @Data
-public class FakeStoreResposeDTO {
+public class FakeStoreResponseDTO {
     public Long id ;
     private String Title ;
     private double Price ;

@@ -26,7 +26,8 @@ private ProductService ps ;
     }
     @PostMapping("/")
     public Product createproduct(@RequestBody Product product){
-          return  new Product() ;
+
+        return ps.createProduct(product);
     }
     @PutMapping("")
     public  Product updateProduct(@RequestBody Product product){

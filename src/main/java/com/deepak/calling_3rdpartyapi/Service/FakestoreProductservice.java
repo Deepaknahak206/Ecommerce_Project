@@ -2,12 +2,11 @@ package com.deepak.calling_3rdpartyapi.Service;
 
 import com.deepak.calling_3rdpartyapi.Models.Category;
 import com.deepak.calling_3rdpartyapi.Models.Product;
-import com.deepak.calling_3rdpartyapi.dtos.FakeStoreResposeDTO;
+import com.deepak.calling_3rdpartyapi.dtos.FakeStoreRequestDTO;
+import com.deepak.calling_3rdpartyapi.dtos.FakeStoreResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 @Service
 public class FakestoreProductservice implements  ProductService{
@@ -16,7 +15,7 @@ public class FakestoreProductservice implements  ProductService{
 
     @Override
     public Product getProductbyId(Long id) {
-       FakeStoreResposeDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResposeDTO.class);
+       FakeStoreResponseDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResponseDTO.class);
     if(fsrd==null){
         return null ;
     }
@@ -25,7 +24,7 @@ public class FakestoreProductservice implements  ProductService{
       return converFakestoredtosToProduct(fsrd) ;
 
         }
-        public Product converFakestoredtosToProduct(FakeStoreResposeDTO fsrd){
+        public Product converFakestoredtosToProduct(FakeStoreResponseDTO fsrd){
         Product p = new Product() ;
         p.setId(fsrd.getId());
         p.setTitle(fsrd.getTitle());
@@ -39,8 +38,19 @@ public class FakestoreProductservice implements  ProductService{
         p.setCategory(c);
         return p ;
         }
+        public FakeStoreRequestDTO ConvertProductToFakeStoreDTO(Product p){
+        FakeStoreRequestDTO fsrd = new FakeStoreRequestDTO() ;
+//        fsrd.setId(p.getId());  // Generate from Database
+        fsrd.setTitle(p.getTitle());
+        fsrd.setDescription(p.getDescription());
+        fsrd.setPrice(p.getPrice());
+        fsrd.setImage(p.getImage());
+        fsrd.setCategory(p.getCategory().getTitle());
+
+        return fsrd ;
+        }
         public Product[] getAllProducts(){
-        FakeStoreResposeDTO[] ftdo = restTemplate.getForObject("https://fakestoreapi.com/Products/", FakeStoreResposeDTO[].class) ;
+        FakeStoreResponseDTO[] ftdo = restTemplate.getForObject("https://fakestoreapi.com/Products/", FakeStoreResponseDTO[].class) ;
 
         if(ftdo==null){
             return null ;
@@ -51,7 +61,18 @@ public class FakestoreProductservice implements  ProductService{
         }
         return products;
         }
+
     @Override
+    public Product createProduct(Product p) {
+        FakeStoreRequestDTO fsrd = ConvertProductToFakeStoreDTO(p);
+        FakeStoreResponseDTO response = restTemplate.postForObject("https://fakestoreapi.com/products/", fsrd, FakeStoreResponseDTO.class);
+        if(response==null){
+            throw  new RuntimeException("Product is null") ;
+        }
+          return converFakestoredtosToProduct(response) ;
+    }
+
+        @Override
     public Product UpdateProduct(Long id) {
         return null;
     }
@@ -61,8 +82,5 @@ public class FakestoreProductservice implements  ProductService{
         return null;
     }
 
-    @Override
-    public Product CreateProduct(Product p) {
-        return null;
-    }
+
 }
