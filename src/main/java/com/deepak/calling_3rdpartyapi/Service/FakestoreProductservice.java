@@ -1,5 +1,6 @@
 package com.deepak.calling_3rdpartyapi.Service;
 
+import com.deepak.calling_3rdpartyapi.ExceptionHandling.ProductNotExist;
 import com.deepak.calling_3rdpartyapi.Models.Category;
 import com.deepak.calling_3rdpartyapi.Models.Product;
 import com.deepak.calling_3rdpartyapi.dtos.FakeStoreRequestDTO;
@@ -14,10 +15,10 @@ public class FakestoreProductservice implements  ProductService{
     private RestTemplate restTemplate ;
 
     @Override
-    public Product getProductbyId(Long id) {
+    public Product getProductbyId(Long id) throws ProductNotExist {
        FakeStoreResponseDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResponseDTO.class);
     if(fsrd==null){
-        return null ;
+        throw new ProductNotExist("Product not Exist");
     }
 
     //  if there is any response than convert to product
@@ -49,11 +50,11 @@ public class FakestoreProductservice implements  ProductService{
 
         return fsrd ;
         }
-        public Product[] getAllProducts(){
+        public Product[] getAllProducts() {
         FakeStoreResponseDTO[] ftdo = restTemplate.getForObject("https://fakestoreapi.com/Products/", FakeStoreResponseDTO[].class) ;
 
         if(ftdo==null){
-            return null ;
+         return  null ;
         }
         Product[] products = new Product[ftdo.length] ;
         for(int i =0;i< ftdo.length;i++){
