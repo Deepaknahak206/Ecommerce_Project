@@ -73,15 +73,19 @@ public class FakestoreProductservice implements  ProductService{
           return converFakestoredtosToProduct(response) ;
     }
 
-        @Override
-    public Product UpdateProduct(Long id) {
-        return null;
+    @Override
+    public Product updateProduct(String id, Product product) {
+        FakeStoreRequestDTO fakeStoreRequestDTO = ConvertProductToFakeStoreDTO(product) ;
+        try{
+            restTemplate.put("https://fakestoreapi.com/products/"+id,fakeStoreRequestDTO);
+        }catch (Exception e){
+            throw new RuntimeException("Product Not updated") ;
+        }
+        return product ;
     }
 
     @Override
     public Product DeleteProduct(Long id) {
         return null;
     }
-
-
 }

@@ -32,9 +32,11 @@ private ProductService ps ;
 
         return ps.createProduct(product);
     }
-    @PutMapping("")
-    public  Product updateProduct(@RequestBody Product product){
-        return new Product() ;
+
+    @PutMapping("/{id}")
+    public  Product updateProduct(@PathVariable("id") Long id , @RequestBody Product product){
+
+    return ps.updateProduct(String.valueOf(id),product);
     }
     @DeleteMapping("/{id}") // No need of request body
     public void deleteProduct(){

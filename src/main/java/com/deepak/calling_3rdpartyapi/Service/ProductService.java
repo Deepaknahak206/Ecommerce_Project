@@ -8,12 +8,12 @@ public interface ProductService {
 
     Product getProductbyId(Long id) throws ProductNotExist;
 
-    Product UpdateProduct(Long id) ;
-
     Product DeleteProduct(Long id) ;
 
     Product[] getAllProducts() throws ProductNotExist;
 
 
     Product createProduct(Product p);
+
+    Product updateProduct(String id, Product product);
 }
