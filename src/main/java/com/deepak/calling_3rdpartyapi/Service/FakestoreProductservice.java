@@ -11,20 +11,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class FakestoreProductservice implements  ProductService{
-    @Autowired
+
     private RestTemplate restTemplate ;
-
-    @Override
-    public Product getProductbyId(Long id) throws ProductNotExist {
-       FakeStoreResponseDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResponseDTO.class);
-    if(fsrd==null){
-        throw new ProductNotExist("Product not Exist");
+    @Autowired
+    FakestoreProductservice(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
     }
-
-    //  if there is any response than convert to product
-      return converFakestoredtosToProduct(fsrd) ;
-
-        }
         public Product converFakestoredtosToProduct(FakeStoreResponseDTO fsrd){
         Product p = new Product() ;
         p.setId(fsrd.getId());
@@ -83,7 +75,16 @@ public class FakestoreProductservice implements  ProductService{
         }
         return product ;
     }
+    @Override
+    public Product getProductById(long id) throws ProductNotExist {
+        FakeStoreResponseDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResponseDTO.class);
+        if(fsrd==null){
+            throw new ProductNotExist("Product not Exist");
+        }
 
+        //  if there is any response than convert to product
+        return converFakestoredtosToProduct(fsrd) ;
+    }
     @Override
     public Product DeleteProduct(Long id) {
         return null;
