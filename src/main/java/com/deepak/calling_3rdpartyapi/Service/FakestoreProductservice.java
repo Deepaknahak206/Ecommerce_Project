@@ -13,11 +13,21 @@ import org.springframework.web.client.RestTemplate;
 public class FakestoreProductservice implements  ProductService{
 
     private RestTemplate restTemplate ;
-    @Autowired
     FakestoreProductservice(RestTemplate restTemplate){
         this.restTemplate = restTemplate;
     }
-        public Product converFakestoredtosToProduct(FakeStoreResponseDTO fsrd){
+
+    @Override
+    public Product getProductById(long id) throws ProductNotExist {
+        FakeStoreResponseDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResponseDTO.class);
+        if(fsrd==null){
+            throw new ProductNotExist("Product not Exist");
+        }
+
+        //  if there is any response than convert to product
+        return converFakestoredtosToProduct(fsrd) ;
+    }
+    public Product converFakestoredtosToProduct(FakeStoreResponseDTO fsrd){
         Product p = new Product() ;
         p.setId(fsrd.getId());
         p.setTitle(fsrd.getTitle());
@@ -30,8 +40,8 @@ public class FakestoreProductservice implements  ProductService{
         c.setId(fsrd.getId());
         p.setCategory(c);
         return p ;
-        }
-        public FakeStoreRequestDTO ConvertProductToFakeStoreDTO(Product p){
+    }
+    public FakeStoreRequestDTO ConvertProductToFakeStoreDTO(Product p){
         FakeStoreRequestDTO fsrd = new FakeStoreRequestDTO() ;
 //        fsrd.setId(p.getId());  // Generate from Database
         fsrd.setTitle(p.getTitle());
@@ -41,19 +51,25 @@ public class FakestoreProductservice implements  ProductService{
         fsrd.setCategory(p.getCategory().getTitle());
 
         return fsrd ;
-        }
-        public Product[] getAllProducts() {
+    }
+    @Override
+    public Product DeleteProduct(Long id) {
+        return null;
+    }
+
+    @Override
+    public Product[] getAllProducts() throws ProductNotExist {
         FakeStoreResponseDTO[] ftdo = restTemplate.getForObject("https://fakestoreapi.com/Products/", FakeStoreResponseDTO[].class) ;
 
         if(ftdo==null){
-         return  null ;
+            return  null ;
         }
         Product[] products = new Product[ftdo.length] ;
         for(int i =0;i< ftdo.length;i++){
             products[i] = converFakestoredtosToProduct(ftdo[i]) ;
         }
         return products;
-        }
+    }
 
     @Override
     public Product createProduct(Product p) {
@@ -62,7 +78,7 @@ public class FakestoreProductservice implements  ProductService{
         if(response==null){
             throw  new RuntimeException("Product is null") ;
         }
-          return converFakestoredtosToProduct(response) ;
+        return converFakestoredtosToProduct(response) ;
     }
 
     @Override
@@ -74,19 +90,5 @@ public class FakestoreProductservice implements  ProductService{
             throw new RuntimeException("Product Not updated") ;
         }
         return product ;
-    }
-    @Override
-    public Product getProductById(long id) throws ProductNotExist {
-        FakeStoreResponseDTO fsrd = restTemplate.getForObject("https://fakestoreapi.com/Products/"+id, FakeStoreResponseDTO.class);
-        if(fsrd==null){
-            throw new ProductNotExist("Product not Exist");
-        }
-
-        //  if there is any response than convert to product
-        return converFakestoredtosToProduct(fsrd) ;
-    }
-    @Override
-    public Product DeleteProduct(Long id) {
-        return null;
     }
 }

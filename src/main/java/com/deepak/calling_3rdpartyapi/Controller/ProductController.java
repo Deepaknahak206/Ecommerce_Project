@@ -2,6 +2,7 @@ package com.deepak.calling_3rdpartyapi.Controller;
 
 import com.deepak.calling_3rdpartyapi.ExceptionHandling.ProductNotExist;
 import com.deepak.calling_3rdpartyapi.Models.Product;
+import com.deepak.calling_3rdpartyapi.Service.FakestoreProductservice;
 import com.deepak.calling_3rdpartyapi.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,18 +16,12 @@ import java.util.List;
 @RequestMapping("/Products")
 public class ProductController {
 
-@Autowired
-private ProductService ps ;
-//    private AuthCommon authCommon;
-//    public ProductController(@Qualifier("SelfProductService") ProductService productService,
-//                             AuthCommon authCommon){
-//        this.ps = productService;
-//        this.authCommon = authCommon;
-//    }
-
+private ProductService ps;
+public ProductController(@Qualifier("SelfProductService") ProductService productService){
+    this.ps = productService ;
+}
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id)  {
-
         return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
     }
 
@@ -36,6 +31,7 @@ private ProductService ps ;
     }
     @PostMapping("/")
     public Product createproduct(@RequestBody Product product){
+
         return ps.createProduct(product);
     }
 

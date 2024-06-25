@@ -13,7 +13,4 @@ import java.util.Date;
 public class BaseModel {
     @Id
     private Long id ;
-
-    private Date createdDate ;
-    private Date UpdateDate ;
 }

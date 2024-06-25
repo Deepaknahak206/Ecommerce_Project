@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 @Entity
 public class Product extends BaseModel{
-    private String Title ;
+    private String title ;
     private double Price ;
-    private String Description ;
+    private String description ;
     private String Image ;
     /* Product --> Category
        1 product many Category
