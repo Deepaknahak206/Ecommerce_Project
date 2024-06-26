@@ -2,6 +2,7 @@ package com.deepak.calling_3rdpartyapi.Models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class Product extends BaseModel{
        1category 1 product
     */
     @ManyToOne
+//    @JoinColumn
     private  Category category ;
 }
